@@ -1,4 +1,5 @@
 * Learn patterns, learn them slowly.
+* Start with basic NN and run a  Back-prop (but on a sparse network)
 
 I have the idea of doing the ocil problem. But how would a NN solve it? how to make a NN do clustering. BP requires a desired outcome. Or at least to know if the outcome you got is closer or farther from good or bad. 
 
@@ -14,6 +15,8 @@ This is the first test:
 * This will prove that it can be done without *strict* classes (still, need to know how many classes, just not which ones)
 
 
+How do we actually do back-prop? And is our use of sparse NNs going to work?
+Take a NN and work back into the weights of the things that lead in. I think it's actually fine to do it this way, but it'll be hard to think about with the transition, we'll need a clear diff.
 
 what could a weak AI solve for you? Financial management? There are many day-to-day problems. But a strong AI is going to have to learn and evolve to live on it's own. No teaching. Just independant learning
 .
