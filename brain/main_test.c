@@ -58,6 +58,10 @@ void runTests()
    printf("Passed: Brain tests\n");
  else
    printf("Failed: Brain tests\n");
+ if(quickSigmoid_test() == 1)
+   printf("Passed: QuickSigmoid tests\n");
+ else
+   printf("Failed: QuickSigmoid tests\n");
 }
 void error_handler(int sig) {
   void *array[40];

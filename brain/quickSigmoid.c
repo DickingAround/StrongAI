@@ -1,4 +1,5 @@
 #include <math.h>
+#include <stdio.h>
 int*	quickSigmoid_SigTab;
 #define R  32767
 #define RR 65556               //65534 + 22
@@ -8,6 +9,7 @@ int*	quickSigmoid_SigTab;
 void quickSigmoid_init(void) {
   int i;
   quickSigmoid_SigTab = (int*) malloc(sizeof(int) * 1025);
+  quickSigmoid_intSigTab = (int*) malloc(sizeof(int) * 1025);
   for(i = 0; i < 1024; i++)
     quickSigmoid_SigTab[i] = 0x20000 / (1 + exp(-((double)i/(double)0x80))) - 0x10000;
 }
@@ -20,13 +22,19 @@ int quickSigmoid_Sigmoid(int x) {
     return 0x10000;
   if((s = x) < 0)
     x = -x;
-
   r = quickSigmoid_SigTab[ (j = x >> 9)]; //16+3-10
   r += ((quickSigmoid_SigTab[ j + 1] - r) * (x&0x1FF)) >> 9;//remaining bitsafter indexing off the fist 10
-  
   if(s < 0)
     return -r;
   else
     return r;
+}
+int quickSigmoid_inverseSigmoid(int x) {
+ double r = ((float)x/(float)0x10000 + 1.0)/2.0;
+ return log(r/(1.0-r)); 
+}
+void quickSigmoid_test() {
+ printf(quickSigmoid_Sigmoid(0x120000));
+ printf(quickSigmoid_inverseSigmoid(quickSigmoid_Sigmoid(0x120000))); 
 }
 #endif

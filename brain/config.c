@@ -1,4 +1,5 @@
 //We have a range of initalization that's different from the max in an effort to collect the values
+#define AG_INPUTS 100
 #define AG_INPUTS_INIT 100 //Don't need to do signals or memory
 #define AG_MIDS_INIT 100 //Don't  need to use most middle connections
 #define AG_MID_NODES 100
@@ -21,8 +22,6 @@
 #define AG_MEM_OUT 0
 #define AG_MEM_NUMB 0
 //Remmber, total options is 0-based
-
-#define AG_INPUTS 100
 #define AG_IN_MEM 1000
 
 #define AG_INPUT_MAX 0xFF
