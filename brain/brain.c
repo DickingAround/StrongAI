@@ -17,15 +17,14 @@ void brain_makeDecision(brain *br) {
   level_makeDecision(br->levels[i],br->levels[i-1]->outputs);
  }
 }
-void brain_learn(brain *br, int *idealOutput) {
+void brain_learn(brain *br, int *idealOutput, float speed) {
  int i;
- //Run the inverse sigmoid
- for(i = 
  //Run the inverse learning
- level_learn(br->levels[br->numberOfLevels-1],idealOutput);
+ level_learn(br->levels[br->numberOfLevels-1],idealOutput,speed);
  for(i = br->numberOfLevels - 2; i > 0; i++) {
-  level_learn(br->levels[i],br->levels[i+1]->
+  level_learn(br->levels[i],br->levels[i-1]->outputs,speed);
  }
+ level_learn(br->levels[0],NULL,speed);
 }
 
 #endif
