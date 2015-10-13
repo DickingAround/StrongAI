@@ -9,7 +9,6 @@ int*	quickSigmoid_SigTab;
 void quickSigmoid_init(void) {
   int i;
   quickSigmoid_SigTab = (int*) malloc(sizeof(int) * 1025);
-  quickSigmoid_intSigTab = (int*) malloc(sizeof(int) * 1025);
   for(i = 0; i < 1024; i++)
     quickSigmoid_SigTab[i] = 0x20000 / (1 + exp(-((double)i/(double)0x80))) - 0x10000;
 }
@@ -33,8 +32,9 @@ int quickSigmoid_inverseSigmoid(int x) {
  double r = ((float)x/(float)0x10000 + 1.0)/2.0;
  return log(r/(1.0-r)); 
 }
-void quickSigmoid_test() {
- printf(quickSigmoid_Sigmoid(0x120000));
- printf(quickSigmoid_inverseSigmoid(quickSigmoid_Sigmoid(0x120000))); 
+int quickSigmoid_test() {
+ printf("%i",quickSigmoid_Sigmoid(0x120000));
+ printf("%i",quickSigmoid_inverseSigmoid(quickSigmoid_Sigmoid(0x120000))); 
+ return 0;
 }
 #endif

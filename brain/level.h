@@ -23,5 +23,5 @@ typedef struct level
 
 void level_makeNew(level *newLvl);
 void level_makeDecision(level *lvl, int *inputs);
-void level_learn(level *lvl, int *idealOutputsPreSigmoid);
+void level_learn(level *lvl, int *idealOutputsPreSigmoid, float speed);
 #endif

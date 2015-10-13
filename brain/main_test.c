@@ -7,13 +7,16 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
+#include "level.h"
 #include "brain.h"
 #include "fastRand.h"
 fastRand fr;
 void error_handler(int sig); 
 #include "quickSigmoid.c"
 #include "fastRand.c"
+#include "level.c"
 #include "brain.c"
+#include "brain_test.c"
 void runTests();
 void run();
 int main(int argc, char** argv)
@@ -32,26 +35,10 @@ int main(int argc, char** argv)
     runTests();
     break;
    case 'r': //Run
-    run();
     printf("Nothing to run\n");
     break;
   }
 }
-void run()
-{
- int i,decision;
- float speed = 0.001;
- unsigned int **data;
- brain b;
- brain_makeFromScratch(&b);
- //TODO: Pre-format data (ready for unusual NN style)
- for(i = 0; i < 10000; i++) {
-  brain_makeDecision(&b,data[i]);
-  //Find the top output and back-propigate it, just being decisive
-  brain_learnDecision(&b,b.latestDecision,speed);  
- }
-}
-
 void runTests()
 {
  if(brain_test() == 1)

@@ -3,11 +3,11 @@
 #include "brain.h"
 void brain_makeNew(brain *newBr, int numberOfLevels) {
  int i;
- newBr = (brain *)malloc(sizeof(brain));
+ newBr = (brain*) malloc(sizeof(brain));
  newBr->numberOfLevels = numberOfLevels;
- newBr->levels = (levels **)malloc(sizeof(level *));
- for(i=0; i < newBr-numberOfLevels ;i++) {
-  newBr->levels[i] = (levels *)malloc(sizeof(level));
+ newBr->levels = (level**) malloc(sizeof(level *));
+ for(i=0; i < newBr->numberOfLevels ;i++) {
+  newBr->levels[i] = (level*) malloc(sizeof(level));
  }
 }
 void brain_makeDecision(brain *br) {
