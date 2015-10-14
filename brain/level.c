@@ -21,8 +21,7 @@ void level_makeNew(level *newLvl, int inputs, int outputs, int connections) {
   newLvl->conWeight[i] = (rand() / (float)RAND_MAX - 0.5) * AG_MULT_INIT_RANGE;
  } 
 }
-//TODO: Check the foreward computing now that we've changed
-void level_makeDecision(level *lvl, int *inputs) {
+void level_makeDecision(level *lvl) {
  int i;
  int outputs, outputsPreSigmoid; 
  unsigned char *conIn, *conOut;
@@ -33,14 +32,24 @@ void level_makeDecision(level *lvl, int *inputs) {
  conIn = lvl->conIn;
  conOut = lvl->conOut;
  conWeight = lvl->conWeight;
- numberOfInputs = lvl->numberOfInputs;
  numberOfOutputs = lvl->numberOfOutputs;
- for(i = 0; i < numberOfInputs; i++) {
-  outputs[i] = 0;
+ //Check the input source
+ if(lvl->previousLevel == NULL) {
+  inputs = lvl->firstInputs;
+  numberOfInputs = lvl->numberOfFirstInputs;
+ } else {
+  inputs = lvl->previousLevel->ouputs;
+  numberOfInputs = lvl->previousLevel->numberOfOutputs;
  } 
+ //Clear all current output data
+ for(i = 0; i < numberOfOutputs; i++) {
+  outputs[i] = 0;
+ }
+ //Run each connection
  for(i = 0; i < numberOfConnections; i++) {
   outputsPreSigmoid[conOut[i]] += inputs[conIn[i]] * conWeight[i];
  }
+ //Apply sigmoids
  for(i = 0; i < numberOfOutputs; i++ ) {
   outputs[i] = quickSigmoid_Sigmoid(outputsPreSigmoid[i]);
  }
