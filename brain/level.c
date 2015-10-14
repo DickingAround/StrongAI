@@ -21,7 +21,7 @@ void level_makeNew(level *newLvl, int inputs, int outputs, int connections) {
   newLvl->conWeight[i] = (rand() / (float)RAND_MAX - 0.5) * AG_MULT_INIT_RANGE;
  } 
 }
-
+//TODO: Check the foreward computing now that we've changed
 void level_makeDecision(level *lvl, int *inputs) {
  int i;
  int outputs, outputsPreSigmoid; 
@@ -45,22 +45,40 @@ void level_makeDecision(level *lvl, int *inputs) {
   outputs[i] = quickSigmoid_Sigmoid(outputsPreSigmoid[i]);
  }
 }
-//Inputs can be NULL, and should be when this is level 1
-void level_learn(level *lvl, int *idealOutputsPreSigmoid, int *inputs, float speed) {
+void level_learn(level *lvl, float speed) {
  int i;
- unsigned int numberOfOutputs, numberOfConnections, 
- int *outputDeltas, *outputsPreSigmoid, *outputs;
+ unsigned int numberOfOutputs, numberOfInputs, numberOfConnections;
+ int *outputsDeltas, *outputsPreSigmoid, *outputs;
  float *conWeight; 
- for(i=0; i < numberOfOutputs ;i++) {
-  outputDeltas[i] = idealOutputsPreSigmoid[i] - outputsPreSigmoid[i];
+ outputsPreSigmoid = lvl->outputsPreSigmoid;
+ outputsDeltas = lvl->outputsDeltas;
+ conWeight = lvl->conWeight;
+ numberOfConnections = lvl->numberOfCOnnections;
+ numberOfOutputs = lvl->numberOfOutputs;
+ outputsIdealPostSigmoid = lvl->outputsIdealPostSigmoid;
+ //Figure out which inputs to use? (the very first, or from the previous level?)
+ if(lvl->previousLevel == NULL) {
+  inputs = lvl->firstInputs;
+  numberOfInputs = lvl->numberOfFirstInputs;
+ } else {
+  inputs = lvl->previousLevel->outputs;
+  numberOfInputs = lvl->previousLevel->numberOfOutputs;
  }
+ //Compute the delta from the ideals we've been given
+ for(i=0; i < numberOfOutputs ;i++) {
+  outputsDeltas[i] = quickSigmoid_inverseSigmoid(outputsIdealPostSigmoid[i]) - outputsPreSigmoid[i];
+ }
+ //Train the weights
  for(i=0; i < numberOfConnections ;i++) {
-  conWeight[i] += outputDeltas[i]/inputs[i] * speed; 
+  conWeight[i] += outputsDeltas[i]/inputs[i] * speed; 
  } 
- if( inputs == NULL) {
-  for(i=0; i < numberOfInputs ;i++) {
-   inputs[i] += outputDeltas[i]/conWeight[i] * speed;
+ //Produce the next down set of ideal outputs
+ if(lvl->previousLevel != NULL) { 
+  outputsIdealPostSigmoid = lvl->previousLevel->outputsIdealPostSigmoid;
+  for(i=0; i < numberOfInputs ;i++) { 
+    outputsIdealPostSigmoid[i] += inputs[i] + outputDeltas[i]/conWeight[i] * speed;
   }
  } 
 }
+
 #endif
