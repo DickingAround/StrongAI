@@ -103,5 +103,11 @@ void level_learn(level *lvl, float speed) {
   }
  } 
 }
-
+void level_print(level *lvl) {
+ int i;
+ for(i=0; i < lvl->numberOfConnections ;i++) {
+  printf("%i,%f,%i\t",lvl->conIn[i],lvl->conWeight[i],lvl->conOut[i]);
+ }
+ printf("\n");
+}
 #endif

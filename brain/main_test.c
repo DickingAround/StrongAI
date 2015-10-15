@@ -17,6 +17,7 @@ void error_handler(int sig);
 #include "level.c"
 #include "brain.c"
 #include "brain_test.c"
+#include "level_test.c"
 void runTests();
 void run();
 int main(int argc, char** argv)
@@ -41,6 +42,10 @@ int main(int argc, char** argv)
 }
 void runTests()
 {
+ if(level_test() == 1)
+   printf("Passed: Level tests\n");
+ else
+   printf("Failed: Level tests\n");
  if(brain_test() == 1)
    printf("Passed: Brain tests\n");
  else

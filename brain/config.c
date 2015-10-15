@@ -28,7 +28,7 @@
 //#define AG_INPUT_MIN -- No inputs are possible to be lower numbers
 #define AG_MULT_MAX 0x7F
 #define AG_MULT_MIN -0x7F
-#define AG_MULT_INIT_RANGE 0x2F
+#define AG_MULT_INIT_RANGE 0.1
 
 //Values for making decisions
 #define AG_INT_CONVERSION 0xFFFF
