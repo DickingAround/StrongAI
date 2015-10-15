@@ -14,6 +14,6 @@ int brain_test() {
 
 int brain_test_makeDecision() {
  //In, out, level, mids, connections
- brain *br = brain_makeNew(10,10,2,100,200);
+ brain *br = brain_makeNew(10,10,2,100,10);
 }
 #endif

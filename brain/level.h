@@ -30,4 +30,5 @@ level *level_makeNew(int firstInputs, int outputs, int connections, level* previ
 void level_makeDecision(level *lvl);
 void level_learn(level *lvl, float speed);
 void level_print(level *lvl);
+void level_printOutputs(level *lvl);
 #endif

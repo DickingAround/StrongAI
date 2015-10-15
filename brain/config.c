@@ -1,3 +1,7 @@
+//Still used
+#define AG_MULT_INIT_RANGE 0.1
+#define AG_INT_CONVERSION 0xFFFF
+
 //We have a range of initalization that's different from the max in an effort to collect the values
 #define AG_INPUTS 100
 #define AG_INPUTS_INIT 100 //Don't need to do signals or memory
@@ -28,7 +32,6 @@
 //#define AG_INPUT_MIN -- No inputs are possible to be lower numbers
 #define AG_MULT_MAX 0x7F
 #define AG_MULT_MIN -0x7F
-#define AG_MULT_INIT_RANGE 0.1
 
 //Values for making decisions
 #define AG_INT_CONVERSION 0xFFFF

@@ -32,6 +32,7 @@ level *level_makeNew(int firstInputs, int outputs, int connections, level *previ
   newLvl->conIn[i] = rand() / (float)RAND_MAX * inputs;
   newLvl->conOut[i] = rand() / (float)RAND_MAX * outputs;
   newLvl->conWeight[i] = (rand() / (float)RAND_MAX - 0.5) * AG_MULT_INIT_RANGE;
+  printf("new con: %i,%f\n",i,newLvl->conWeight[i]);
  } 
  return newLvl;
 }
@@ -72,7 +73,7 @@ void level_makeDecision(level *lvl) {
  }
 }
 void level_learn(level *lvl, float speed) {
- int i;
+ int i, adjustedIdealOutput;
  unsigned int numberOfOutputs, numberOfInputs, numberOfConnections;
  int *outputsDeltas, *outputsPreSigmoid, *outputs, *inputs, *outputsIdealPostSigmoid;
  int *previousOutputs,*previousOutputsIdealPostSigmoid;
@@ -96,19 +97,25 @@ void level_learn(level *lvl, float speed) {
  }
  //Compute the delta from the ideals we've been given
  for(i=0; i < numberOfOutputs ;i++) {
-  outputsDeltas[i] = quickSigmoid_inverseSigmoid(outputsIdealPostSigmoid[i]) - outputsPreSigmoid[i];
-  //printf("Delta %i,%i\n",i,outputsDeltas[i]); 
+  adjustedIdealOutput = quickSigmoid_inverseSigmoid(outputsIdealPostSigmoid[i]);
+  if(adjustedIdealOutput > AG_INT_CONVERSION) //Adjust in case someone puts in an impossible goal, which messes with the quick sigmoid function
+    adjustedIdealOutput = AG_INT_CONVERSION-1;
+  else if(adjustedIdealOutput < AG_INT_CONVERSION)
+    adjustedIdealOutput = -AG_INT_CONVERSION+1;
+  outputsDeltas[i] = adjustedIdealOutput - outputsPreSigmoid[i];
+  printf("Delta %i: fin:%i, idealPre%i, actualPre%i\n",i,
+  outputsDeltas[i],quickSigmoid_inverseSigmoid(outputsIdealPostSigmoid[i]),outputsPreSigmoid[i]);
  }
  //Train the weights
  for(i=0; i < numberOfConnections ;i++) {
-  //printf("--Running connection %i\n",i);
-  //printf("ConWeight %f\n",conWeight[i]);
-  //printf("outputsDel %i\n",outputsDeltas[conOut[i]]);
-  //printf("inputs %i\n",inputs[conIn[i]]);
+  printf("--Running connection %i\n",i);
+  printf("ConWeight %f\n",conWeight[i]);
+  printf("outputsDel %i\n",outputsDeltas[conOut[i]]);
+  printf("inputs %i\n",inputs[conIn[i]]);
   if(inputs[conIn[i]] != 0) {
    conWeight[i] += (float)outputsDeltas[conOut[i]]/(float)inputs[conIn[i]] * speed; 
   }
-  //printf("newConWeight %f\n",conWeight[i]);
+  printf("newConWeight %f\n",conWeight[i]);
  } 
  //Produce the next down set of ideal outputs
  if(lvl->previousLevel != NULL) { 
@@ -118,7 +125,7 @@ void level_learn(level *lvl, float speed) {
     previousOutputsIdealPostSigmoid[i] = inputs[i]; 
   }
   //Run each connection to average this lower one 
-  for(i=0; i < numberOfConnections ;i++) {//TODO: IS THIS EVEN LOGICALLY RIGHT?? 
+  for(i=0; i < numberOfConnections ;i++) { 
     previousOutputsIdealPostSigmoid[i] += outputsDeltas[conOut[i]]/conWeight[i] * speed;
   }
  } 
@@ -127,6 +134,13 @@ void level_print(level *lvl) {
  int i;
  for(i=0; i < lvl->numberOfConnections ;i++) {
   printf("%i,%f,%i\t",lvl->conIn[i],lvl->conWeight[i],lvl->conOut[i]);
+ }
+ printf("\n");
+}
+void level_printOutputs(level *lvl) {
+ int i;
+ for(i=0; i < lvl->numberOfOutputs ;i++) {
+  printf("%f , ",lvl->outputs[i]*(float)AG_INT_CONVERSION);
  }
  printf("\n");
 }
