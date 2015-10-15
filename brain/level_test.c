@@ -34,7 +34,7 @@ int level_test_learn() {
  lvl->conIn[1] = 3;
  lvl->conOut[1] = 3;
  lvl->conWeight[1] = 0.01;
- for(i=0; i < 1000 ;i++) {
+ for(i=0; i < 100 ;i++) {
   level_makeDecision(lvl);
   level_learn(lvl,0.1);
  }
@@ -51,30 +51,33 @@ int level_test_learn() {
  }
  //Next test
  ideal[0] = 0.1;ideal[1]=0.3;ideal[2]=-1.0;ideal[3]=10.0; 
- srand(0);
- lvl = level_makeNew(4,4,100,NULL);
+ srand(3);
+ lvl = level_makeNew(4,4,40,NULL);
  //First test: does it learn a basic thing
  for(i=0; i < 4 ;i++) {
   lvl->firstInputs[i] = (i+1)*AG_INT_CONVERSION;
   lvl->outputsIdealPostSigmoid[i] = (int)(ideal[i]*AG_INT_CONVERSION);
  }
- level_print(lvl);
- for(i=0; i < 3 ;i++) {
+ //level_print(lvl);
+ for(i=0; i < 20 ;i++) {
   level_makeDecision(lvl);
   level_learn(lvl,0.1);
-  level_print(lvl); 
-  level_printOutputs(lvl);
+  //level_print(lvl); 
+  //level_printOutputs(lvl);
  }
- //if(lvl->outputs[0]/(float)AG_INT_CONVERSION < -0.01 || 
-  //  lvl->outputs[0]/(float)AG_INT_CONVERSION > 0.01 || 
-   // lvl->outputs[3]/(float)AG_INT_CONVERSION < 0.4 || 
-   // lvl->outputs[3]/(float)AG_INT_CONVERSION > 0.6) {
-  //printf("Failed: Learning test 1\n"); 
-  //level_print(lvl);
-  for(i=0; i < 4 ;i++) {
-   printf("%f\n",(float)lvl->outputs[i]/(float)AG_INT_CONVERSION);
+ if(lvl->outputs[0]/(float)AG_INT_CONVERSION < 0.09 || 
+    lvl->outputs[0]/(float)AG_INT_CONVERSION > 0.11 || 
+    lvl->outputs[1]/(float)AG_INT_CONVERSION < 0.29 || 
+    lvl->outputs[1]/(float)AG_INT_CONVERSION > 0.31 ||
+    lvl->outputs[2]/(float)AG_INT_CONVERSION < -1.01 || 
+    lvl->outputs[2]/(float)AG_INT_CONVERSION > 0.99 || 
+    lvl->outputs[3]/(float)AG_INT_CONVERSION < 0.99 || 
+    lvl->outputs[3]/(float)AG_INT_CONVERSION > 1.01) {
+  printf("Failed: Learning test 2\n"); 
+  level_print(lvl);
+  level_printOutputs(lvl);
+  return 0;
   } 
-  //return 0;
  return 1;
 }
 int level_test() {

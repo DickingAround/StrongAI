@@ -96,26 +96,31 @@ void level_learn(level *lvl, float speed) {
   numberOfInputs = lvl->previousLevel->numberOfOutputs;
  }
  //Compute the delta from the ideals we've been given
+ //printf("About to run quick sigmoid");
  for(i=0; i < numberOfOutputs ;i++) {
-  adjustedIdealOutput = quickSigmoid_inverseSigmoid(outputsIdealPostSigmoid[i]);
-  if(adjustedIdealOutput > AG_INT_CONVERSION) //Adjust in case someone puts in an impossible goal, which messes with the quick sigmoid function
+  if(outputsIdealPostSigmoid[i] >= AG_INT_CONVERSION)
     adjustedIdealOutput = AG_INT_CONVERSION-1;
-  else if(adjustedIdealOutput < AG_INT_CONVERSION)
+  else if(outputsIdealPostSigmoid[i] <= -AG_INT_CONVERSION)
     adjustedIdealOutput = -AG_INT_CONVERSION+1;
-  outputsDeltas[i] = adjustedIdealOutput - outputsPreSigmoid[i];
-  printf("Delta %i: fin:%i, idealPre%i, actualPre%i\n",i,
-  outputsDeltas[i],quickSigmoid_inverseSigmoid(outputsIdealPostSigmoid[i]),outputsPreSigmoid[i]);
+  else
+    adjustedIdealOutput = outputsIdealPostSigmoid[i]; 
+  quickSigmoid_inverseSigmoid(outputsIdealPostSigmoid[i]);
+  //printf("idealOutput %i: %i , (%i,%i)\n",i,adjustedIdealOutput,AG_INT_CONVERSION,-AG_INT_CONVERSION);
+  outputsDeltas[i] = quickSigmoid_inverseSigmoid(adjustedIdealOutput) - outputsPreSigmoid[i];
+  //printf("Delta %i: fin:%i, idealPre%i, actualPre%i\n",i,
+  //outputsDeltas[i],quickSigmoid_inverseSigmoid(outputsIdealPostSigmoid[i]),outputsPreSigmoid[i]);
+  //printf("Done running quick sigmoid");
  }
  //Train the weights
  for(i=0; i < numberOfConnections ;i++) {
-  printf("--Running connection %i\n",i);
-  printf("ConWeight %f\n",conWeight[i]);
-  printf("outputsDel %i\n",outputsDeltas[conOut[i]]);
-  printf("inputs %i\n",inputs[conIn[i]]);
+  //printf("--Running connection %i\n",i);
+  //printf("ConWeight %f\n",conWeight[i]);
+  //printf("outputsDel %i\n",outputsDeltas[conOut[i]]);
+  //printf("inputs %i\n",inputs[conIn[i]]);
   if(inputs[conIn[i]] != 0) {
    conWeight[i] += (float)outputsDeltas[conOut[i]]/(float)inputs[conIn[i]] * speed; 
   }
-  printf("newConWeight %f\n",conWeight[i]);
+  //printf("newConWeight %f\n",conWeight[i]);
  } 
  //Produce the next down set of ideal outputs
  if(lvl->previousLevel != NULL) { 
