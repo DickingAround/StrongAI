@@ -29,12 +29,15 @@ int quickSigmoid_Sigmoid(int x) {
     return r;
 }
 int quickSigmoid_inverseSigmoid(int x) {
- double r = ((float)x/(float)0x10000 + 1.0)/2.0;
- return log(r/(1.0-r)); 
+ double r = (((float)x/(float)0x10000) + 1.0)/2.0;
+ return (int)(log(r/(1.0-r))*0x10000); 
 }
 int quickSigmoid_test() {
- printf("%i",quickSigmoid_Sigmoid(0x120000));
- printf("%i",quickSigmoid_inverseSigmoid(quickSigmoid_Sigmoid(0x120000))); 
+ if(quickSigmoid_inverseSigmoid(quickSigmoid_Sigmoid(0x5000)) <= 0x5001 &&
+    quickSigmoid_inverseSigmoid(quickSigmoid_Sigmoid(0x5000)) >= 0x4999) {
+  return 1;
+ }
+ printf("%i\n",quickSigmoid_inverseSigmoid(quickSigmoid_Sigmoid(0x5000))); 
  return 0;
 }
 #endif
