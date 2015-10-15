@@ -13,7 +13,7 @@ int brain_test() {
 }
 
 int brain_test_makeDecision() {
- brain *br;
- brain_makeNew(br, 2);
+ //In, out, level, mids, connections
+ brain *br = brain_makeNew(10,10,2,100,200);
 }
 #endif
